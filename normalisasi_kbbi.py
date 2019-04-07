@@ -1,5 +1,6 @@
 
-f=open('data/kata_kbbi.txt')
+#f=open('data/kata_kbbi.txt')
+f=open('data/kata_kbbi_new.txt')
 f=f.read()
 from jarowinkler import similarity as sim
 kata_ = sorted(set(f.split()))
