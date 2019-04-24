@@ -25,13 +25,13 @@ def distinc_huruf(kata, jm=1):
     else:
         if kata[1].isalpha() and kata[1] not in n_kata:
             n_kata.append(kata[1])
-    if kata[0]=='a' or kata[0]=='m' or kata[0]=='p':#or kata[1]=='a' or kata[1]=='m' or kata[1]=='p':
+    if kata[0]=='a' or kata[0]=='m' or kata[0]=='p'or kata[0]=='b':#or kata[1]=='a' or kata[1]=='m' or kata[1]=='p':
         if kata[0].isalpha():
             n_kata.append(kata[0])
         if kata[1] not in n_kata and kata[1].isalpha():
             n_kata.append(kata[1])
     for hr in kata:
-        if hr not in n_kata and hr != 'a' and hr != 'm' and hr != 'p':
+        if hr not in n_kata and hr != 'a' and hr != 'm' and hr != 'p'and hr != 'b':
             if hr.isalpha():
                 n_kata.append(hr)
     if len(n_kata)>jm:
@@ -48,7 +48,7 @@ def new_corpus(kata, jm):
     #if len(kata)==0:
         #return []
     for i in distinc_huruf(kata, jm=jm):
-        print(i)
+        #print(i)
         f=open('data/kata/'+i+'.txt')
         f=f.read()
         f=f.split()
@@ -75,10 +75,10 @@ def norm_kbbi(komentar, jm=1):
                 if simJaro(kt, sl) >= .96:
                     komentar_split[indx]=kata_2[ix]
                     cek = False
-                    print(len(kata_2))
+                    #print(len(kata_2))
                     break
             if max(list_kemiripan)>=.85 and cek== True:
                 print("similarity",kt, str(max(list_kemiripan)))
                 komentar_split[indx]=kata_2[list_kemiripan.index(max(list_kemiripan))]
-                print(len(kata_2))
+                #print(len(kata_2))
     return " ".join(komentar_split)
