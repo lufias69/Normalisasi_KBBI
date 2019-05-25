@@ -1,7 +1,9 @@
 
 from jarowinkler import similarity as sim
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
 #f=open('data/kata_kbbi.txt')
-f=open('data/kata_kbbi_new.txt')
+f=open(dir_path + '/' +'data/kata_kbbi_new.txt')
 f=f.read()
 kata_ = sorted(set(f.split()))
 #ganti_ = kata_
@@ -49,22 +51,42 @@ def new_corpus(kata, jm):
         #return []
     for i in distinc_huruf(kata, jm=jm):
         #print(i)
-        f=open('data/kata/'+i+'.txt')
+        f=open(dir_path + '/' +'data/kata/'+i+'.txt')
         f=f.read()
         f=f.split()
         corpus+=f
     return corpus
 
-def norm_kbbi(komentar, jm=1):
+def get_data_split():
+    f=open(dir_path + '/' +'data/_replace_.txt')
+    f=f.read()
+    f=f.split()
+    return f
+kata_typo = get_data_split()
 
+def reduksi_huruf(kata):
+#kata = 'siiiiiiapaaaa'
+    nkata  = list()
+    for i,k in enumerate(kata):
+        if i>2:
+            if kata[i]== kata[i-1] and kata[i] == kata[i-2]:
+                continue
+            else:
+                nkata.append(k)
+        else:
+            nkata.append(k)
+    return "".join(nkata)
+
+def norm_kbbi(komentar, jm=1):
     if type(komentar)!=list:
         komentar_split = komentar.split()
     for indx, kt in enumerate(komentar_split):
+        kt = reduksi_huruf(kt)
         if len(just_get_text(kt))==0:
             continue
         #kata_2 = new_corpus(kt, jm=jm)
         cek = True
-        if kt in kata_:
+        if kt in kata_ or kt in kata_typo:
             #komentar_split[indx]=ganti_[kata_.index(kt)]
             continue
         else:
