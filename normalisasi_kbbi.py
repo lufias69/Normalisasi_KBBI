@@ -1,5 +1,7 @@
 
-from jarowinkler import similarity as sim
+#from jarowinkler import similarity as sim
+from pyjarowinkler import distance as sim
+import re
 import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #f=open('data/kata_kbbi.txt')
@@ -27,11 +29,14 @@ def distinc_huruf(kata, jm=1):
     else:
         if kata[1].isalpha() and kata[1] not in n_kata:
             n_kata.append(kata[1])
-    if kata[0]=='a' or kata[0]=='m' or kata[0]=='p'or kata[0]=='b':#or kata[1]=='a' or kata[1]=='m' or kata[1]=='p':
-        if kata[0].isalpha():
-            n_kata.append(kata[0])
-        if kata[1] not in n_kata and kata[1].isalpha():
-            n_kata.append(kata[1])
+    try:
+        if kata[0]=='a' or kata[0]=='m' or kata[0]=='p'or kata[0]=='b':#or kata[1]=='a' or kata[1]=='m' or kata[1]=='p':
+            if kata[0].isalpha():
+                n_kata.append(kata[0])
+            if kata[1] not in n_kata and kata[1].isalpha():
+                n_kata.append(kata[1])
+    except:
+        pass
     for hr in kata:
         if hr not in n_kata and hr != 'a' and hr != 'm' and hr != 'p'and hr != 'b':
             if hr.isalpha():
@@ -76,7 +81,8 @@ def reduksi_huruf(kata):
         else:
             nkata.append(k)
     return "".join(nkata)
-
+last_use_k = list()
+last_use_r = list()
 def norm_kbbi(komentar, jm=1):
     if type(komentar)!=list:
         komentar_split = komentar.split()
@@ -89,6 +95,9 @@ def norm_kbbi(komentar, jm=1):
         if kt in kata_ or kt in kata_typo:
             #komentar_split[indx]=ganti_[kata_.index(kt)]
             continue
+        elif kt in last_use_k:
+            last_use_k_index = last_use_k.index(kt)
+            komentar_split[indx] = last_use_r[last_use_k_index]
         else:
             list_kemiripan = []
             kata_2 = new_corpus(kt, jm=jm)
@@ -98,9 +107,15 @@ def norm_kbbi(komentar, jm=1):
                     komentar_split[indx]=kata_2[ix]
                     cek = False
                     #print(len(kata_2))
+                    last_use_k.append(kt)
+                    last_use_r.append(komentar_split[indx])
                     break
             if max(list_kemiripan)>=.85 and cek== True:
-                print("similarity",kt, str(max(list_kemiripan)))
+                #print("similarity",kt, str(max(list_kemiripan)))
                 komentar_split[indx]=kata_2[list_kemiripan.index(max(list_kemiripan))]
+                last_use_k.append(kt)
+                last_use_r.append(komentar_split[indx])
                 #print(len(kata_2))
-    return " ".join(komentar_split)
+    ret = re.sub(' +', ' '," ".join(komentar_split))
+    return ret.strip()
+    #return " ".join(komentar_split)
