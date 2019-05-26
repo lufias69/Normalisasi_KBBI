@@ -67,8 +67,26 @@ def get_data_split():
     f=f.read()
     f=f.split()
     return f
-kata_typo = get_data_split()
 
+
+def getData(alamat):
+    lineList = list()
+    with open(dir_path + '/' + alamat, encoding = "ISO-8859-1") as f:
+        for line in f:
+            lineList.append(line.rstrip('\n'))
+    return lineList
+
+def save_gdiganti():
+    with open(dir_path + '/' +"data/g_diganti.txt", "w") as f:
+        for s in g_diganti:
+            f.write(str(s) +"\n")
+    with open(dir_path + '/' +"data/last_use_k.txt", "w") as f:
+        for s in last_use_k:
+            f.write(str(s) +"\n")
+    with open(dir_path + '/' +"data/last_use_r.txt", "w") as f:
+        for s in last_use_r:
+            f.write(str(s) +"\n")
+            
 def reduksi_huruf(kata):
 #kata = 'siiiiiiapaaaa'
     nkata  = list()
@@ -81,8 +99,12 @@ def reduksi_huruf(kata):
         else:
             nkata.append(k)
     return "".join(nkata)
-last_use_k = list()
-last_use_r = list()
+
+last_use_k = getData('data/last_use_k.txt')
+last_use_r = getData('data/last_use_r.txt')
+g_diganti = getData('data/g_diganti.txt')
+kata_typo = get_data_split()
+
 def norm_kbbi(komentar, jm=1):
     if type(komentar)!=list:
         komentar_split = komentar.split()
@@ -92,7 +114,7 @@ def norm_kbbi(komentar, jm=1):
             continue
         #kata_2 = new_corpus(kt, jm=jm)
         cek = True
-        if kt in kata_ or kt in kata_typo:
+        if kt in kata_ or kt in kata_typo or kt in g_diganti:
             #komentar_split[indx]=ganti_[kata_.index(kt)]
             continue
         elif kt in last_use_k:
@@ -116,6 +138,8 @@ def norm_kbbi(komentar, jm=1):
                 last_use_k.append(kt)
                 last_use_r.append(komentar_split[indx])
                 #print(len(kata_2))
+            else:
+                g_diganti.append(kt)
     ret = re.sub(' +', ' '," ".join(komentar_split))
     return ret.strip()
     #return " ".join(komentar_split)
