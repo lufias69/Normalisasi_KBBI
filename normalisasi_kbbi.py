@@ -1,6 +1,7 @@
 
 #from jarowinkler import similarity as sim
 from pyjarowinkler import distance as sim
+from numba import cuda
 import re
 import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -9,6 +10,8 @@ f=open(dir_path + '/' +'data/kata_kbbi_new.txt')
 f=f.read()
 kata_ = sorted(set(f.split()))
 #ganti_ = kata_
+
+# @cuda.jit(device=True)
 def simJaro(kata1,kata2):
     return sim.get_jaro_distance(kata1, kata2, winkler=True, scaling=0.01)
 
@@ -76,6 +79,7 @@ def getData(alamat):
             lineList.append(line.rstrip('\n'))
     return lineList
 
+# @cuda.jit(device=True)
 def save_gdiganti():
     with open(dir_path + '/' +"data/g_diganti.txt", "w") as f:
         for s in g_diganti:
@@ -109,7 +113,7 @@ last_use_s = getData('data/last_use_s.txt')
 
 g_diganti = getData('data/g_diganti.txt')
 kata_typo = get_data_split()
-
+# @cuda.jit(device=True)
 def norm_kbbi(komentar, jm=1):
     if type(komentar)!=list:
         komentar_split = komentar.split()
@@ -149,5 +153,6 @@ def norm_kbbi(komentar, jm=1):
                 if kt not in g_diganti:
                     g_diganti.append(kt)
     ret = re.sub(' +', ' '," ".join(komentar_split))
+    save_gdiganti()
     return ret.strip()
     #return " ".join(komentar_split)
