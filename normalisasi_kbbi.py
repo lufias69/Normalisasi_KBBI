@@ -119,6 +119,7 @@ def norm_kbbi(komentar, jm=1):
         komentar_split = komentar.split()
     for indx, kt in enumerate(komentar_split):
         kt = reduksi_huruf(kt)
+        komentar_split[indx] = kt
         if len(just_get_text(kt))==0:
             continue
         #kata_2 = new_corpus(kt, jm=jm)
@@ -153,6 +154,6 @@ def norm_kbbi(komentar, jm=1):
                 if kt not in g_diganti:
                     g_diganti.append(kt)
     ret = re.sub(' +', ' '," ".join(komentar_split))
-    save_gdiganti()
+    # save_gdiganti()
     return ret.strip()
     #return " ".join(komentar_split)
