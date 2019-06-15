@@ -94,6 +94,28 @@ def save_gdiganti():
         for s in last_use_s:
             f.write(str(s) +"\n")
             
+def clean():
+    g_diganti = list()
+    with open(dir_path + '/' +"data/g_diganti.txt", "w") as f:
+        for s in g_diganti:
+            f.write(str(s) +"\n")
+            
+    last_use_k = list()
+    with open(dir_path + '/' +"data/last_use_k.txt", "w") as f:
+        for s in last_use_k:
+            f.write(str(s) +"\n")
+            
+    last_use_r = list()
+    with open(dir_path + '/' +"data/last_use_r.txt", "w") as f:
+        for s in last_use_r:
+            f.write(str(s) +"\n")
+            
+    last_use_s = list()
+    with open(dir_path + '/' +"data/last_use_s.txt", "w") as f:
+        for s in last_use_s:
+            f.write(str(s) +"\n")
+            
+            
 def reduksi_huruf(kata):
 #kata = 'siiiiiiapaaaa'
     nkata  = list()
@@ -143,7 +165,7 @@ def norm_kbbi(komentar, jm=1):
                     last_use_r.append(komentar_split[indx])
                     last_use_s.append(simJaro(kt, sl))
                     break
-            if max(list_kemiripan)>=.94 and cek== True:
+            if max(list_kemiripan)>=.96 and cek== True:
                 #print("similarity",kt, str(max(list_kemiripan)))
                 komentar_split[indx]=kata_2[list_kemiripan.index(max(list_kemiripan))]
                 last_use_k.append(kt)
@@ -154,6 +176,6 @@ def norm_kbbi(komentar, jm=1):
                 if kt not in g_diganti:
                     g_diganti.append(kt)
     ret = re.sub(' +', ' '," ".join(komentar_split))
-    # save_gdiganti()
+    save_gdiganti()
     return ret.strip()
     #return " ".join(komentar_split)
