@@ -176,6 +176,9 @@ def norm_kbbi(komentar, jm=1):
                 if kt not in g_diganti:
                     g_diganti.append(kt)
     ret = re.sub(' +', ' '," ".join(komentar_split))
-    save_gdiganti()
+    try:
+        save_gdiganti()
+    except:
+        pass
     return ret.strip()
     #return " ".join(komentar_split)
